@@ -1,0 +1,102 @@
+/**
+ * Global Styles with M3 Design Tokens
+ * 
+ * Pipeline: Figma → Tokens Studio → GitHub → Style Dictionary → CSS Variables
+ * Light/Dark theme support via data-theme attribute
+ */
+
+/* Import generated tokens from Style Dictionary */
+@import "../../dist/tokens.css";
+
+/* Base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light Theme (Default) */
+:root {
+  /* M3 Role Colors - Light */
+  --colors-primary: var(--global-colors-m3-primary-40);
+  --colors-on-primary: var(--global-colors-m3-primary-100);
+  --colors-primary-container: var(--global-colors-m3-primary-90);
+  --colors-on-primary-container: var(--global-colors-m3-primary-10);
+  
+  --colors-secondary: var(--global-colors-m3-secondary-40);
+  --colors-on-secondary: var(--global-colors-m3-secondary-100);
+  --colors-secondary-container: var(--global-colors-m3-secondary-90);
+  --colors-on-secondary-container: var(--global-colors-m3-secondary-10);
+  
+  --colors-surface: var(--global-colors-m3-neutral-99);
+  --colors-on-surface: var(--global-colors-m3-neutral-10);
+  --colors-surface-variant: var(--global-colors-m3-neutral-variant-90);
+  --colors-on-surface-variant: var(--global-colors-m3-neutral-variant-30);
+  
+  --colors-background: var(--global-colors-m3-neutral-99);
+  --colors-on-background: var(--global-colors-m3-neutral-10);
+  
+  --colors-error: var(--global-colors-m3-error-40);
+  --colors-on-error: var(--global-colors-m3-error-100);
+  
+  --colors-outline: var(--global-colors-m3-neutral-variant-50);
+  --colors-outline-variant: var(--global-colors-m3-neutral-variant-80);
+  
+  /* Brand Colors */
+  --colors-brand-primary: var(--global-colors-brand-primary);
+  --colors-brand-secondary: var(--global-colors-brand-secondary);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* M3 Role Colors - Dark */
+  --colors-primary: var(--global-colors-m3-primary-80);
+  --colors-on-primary: var(--global-colors-m3-primary-20);
+  --colors-primary-container: var(--global-colors-m3-primary-30);
+  --colors-on-primary-container: var(--global-colors-m3-primary-90);
+  
+  --colors-secondary: var(--global-colors-m3-secondary-80);
+  --colors-on-secondary: var(--global-colors-m3-secondary-20);
+  --colors-secondary-container: var(--global-colors-m3-secondary-30);
+  --colors-on-secondary-container: var(--global-colors-m3-secondary-90);
+  
+  --colors-surface: var(--global-colors-m3-neutral-10);
+  --colors-on-surface: var(--global-colors-m3-neutral-90);
+  --colors-surface-variant: var(--global-colors-m3-neutral-variant-30);
+  --colors-on-surface-variant: var(--global-colors-m3-neutral-variant-80);
+  
+  --colors-background: var(--global-colors-m3-neutral-10);
+  --colors-on-background: var(--global-colors-m3-neutral-90);
+  
+  --colors-error: var(--global-colors-m3-error-80);
+  --colors-on-error: var(--global-colors-m3-error-20);
+  
+  --colors-outline: var(--global-colors-m3-neutral-variant-60);
+  --colors-outline-variant: var(--global-colors-m3-neutral-variant-30);
+}
+
+/* Focus Ring (A11y) */
+:focus-visible {
+  outline: 2px solid var(--colors-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --colors-outline: var(--global-colors-m3-neutral-variant-30);
+  }
+  
+  [data-theme="dark"] {
+    --colors-outline: var(--global-colors-m3-neutral-variant-80);
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "source": ["tokens/tokens.json"],
+  "platforms": {
+    "css": {
+      "transformGroup": "tokens-studio",
+      "buildPath": "dist/",
+      "files": [
+        {
+          "destination": "tokens.css",
+          "format": "css/variables",
+          "options": {
+            "outputReferences": true
+          }
+        }
+      ]
+    },
+    "tailwind": {
+      "transformGroup": "tokens-studio",
+      "buildPath": "dist/",
+      "files": [
+        {
+          "destination": "tokens.tailwind.json",
+          "format": "json/nested"
+        }
+      ]
+    },
+    "js": {
+      "transformGroup": "tokens-studio",
+      "buildPath": "dist/",
+      "files": [
+        {
+          "destination": "tokens.js",
+          "format": "javascript/es6"
+        },
+        {
+          "destination": "tokens.d.ts",
+          "format": "typescript/es6-declarations"
+        }
+      ]
+    }
+  }
+}

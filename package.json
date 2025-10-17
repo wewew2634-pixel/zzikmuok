@@ -1,0 +1,24 @@
+{
+  "name": "jjikmeok-design-tokens",
+  "version": "1.0.0",
+  "description": "M3 Design Tokens Pipeline with Tokens Studio + Style Dictionary + Tailwind v4",
+  "scripts": {
+    "tokens:build": "style-dictionary build --config config/sd.config.json",
+    "tokens:watch": "style-dictionary build --config config/sd.config.json --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "design-tokens",
+    "material-design-3",
+    "tokens-studio",
+    "style-dictionary",
+    "tailwind-v4"
+  ],
+  "author": "GenSpark AI",
+  "license": "MIT",
+  "devDependencies": {
+    "style-dictionary": "^4.0.0",
+    "@tokens-studio/sd-transforms": "^1.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}

@@ -66,6 +66,32 @@ monitoring_gauge = Gauge(
     registry=registry
 )
 
+# Separated metrics for medical accuracy
+accuracy_gauge = Gauge(
+    'medical_accuracy',
+    'Medical AI accuracy (TP / Total)',
+    ['service', 'analysis_type'],
+    registry=registry
+)
+safety_gauge = Gauge(
+    'medical_safety_score',
+    'Medical safety score (1 - Critical Errors / Total)',
+    ['service', 'analysis_type'],
+    registry=registry
+)
+latency_histogram = Histogram(
+    'medical_latency_seconds',
+    'Medical AI latency distribution',
+    ['service', 'analysis_type', 'percentile'],
+    registry=registry
+)
+error_rate_gauge = Gauge(
+    'medical_error_rate',
+    'Medical AI error rate (%)',
+    ['service', 'error_type'],
+    registry=registry
+)
+
 # FastAPI app
 app = FastAPI(
     title="Andoqest Monitoring & A/B Testing Service",
@@ -124,6 +150,32 @@ class MonitoringMetric(BaseModel):
     value: float
     timestamp: datetime
     tags: Dict[str, str] = {}
+
+class SeparatedMetrics(BaseModel):
+    """Separated medical metrics (NEVER use combined 'medical accuracy 99.9%')"""
+    accuracy: float = Field(
+        ..., 
+        description="Accuracy = TP / (TP + FP + FN)",
+        ge=0.0,
+        le=1.0
+    )
+    safety_score: float = Field(
+        ...,
+        description="Safety Score = 1 - (Critical Errors / Total)",
+        ge=0.0,
+        le=1.0
+    )
+    latency_p50: float = Field(..., description="P50 latency in ms", ge=0.0)
+    latency_p95: float = Field(..., description="P95 latency in ms", ge=0.0)
+    latency_p99: float = Field(..., description="P99 latency in ms", ge=0.0)
+    error_rate: float = Field(
+        ...,
+        description="Error rate in percentage",
+        ge=0.0,
+        le=100.0
+    )
+    service: str = Field(..., description="Service name (8000/8001/8002)")
+    analysis_type: str = Field(..., description="Analysis type")
 
 class AlertRule(BaseModel):
     """Alert rule model"""
@@ -516,6 +568,92 @@ async def get_dashboard(hours: int = 24):
 async def get_metrics():
     """Prometheus metrics endpoint"""
     return generate_latest(registry)
+
+@app.post("/separated_metrics")
+async def record_separated_metrics(metrics: SeparatedMetrics):
+    """Record separated medical metrics (NEVER combined)"""
+    try:
+        # Update Prometheus gauges
+        accuracy_gauge.labels(
+            service=metrics.service,
+            analysis_type=metrics.analysis_type
+        ).set(metrics.accuracy)
+        
+        safety_gauge.labels(
+            service=metrics.service,
+            analysis_type=metrics.analysis_type
+        ).set(metrics.safety_score)
+        
+        error_rate_gauge.labels(
+            service=metrics.service,
+            error_type="all"
+        ).set(metrics.error_rate)
+        
+        # Store in Redis for history
+        redis_client.hset(
+            f"separated_metrics:{metrics.service}:{datetime.utcnow().timestamp()}",
+            mapping=metrics.dict()
+        )
+        
+        logger.info(
+            "Separated metrics recorded",
+            service=metrics.service,
+            accuracy=metrics.accuracy,
+            safety_score=metrics.safety_score,
+            latency_p95=metrics.latency_p95
+        )
+        
+        return {"status": "recorded", "timestamp": datetime.utcnow()}
+        
+    except Exception as e:
+        logger.error("Failed to record separated metrics", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to record metrics: {str(e)}")
+
+@app.get("/separated_metrics/{service}")
+async def get_separated_metrics(service: str, hours: int = 24):
+    """Get separated metrics for a service"""
+    try:
+        end_time = datetime.utcnow()
+        start_time = end_time - timedelta(hours=hours)
+        
+        # Get all metric keys for this service
+        metric_keys = redis_client.keys(f"separated_metrics:{service}:*")
+        
+        metrics_history = []
+        for key in metric_keys:
+            timestamp_str = key.split(":")[-1]
+            timestamp = datetime.fromtimestamp(float(timestamp_str))
+            
+            if start_time <= timestamp <= end_time:
+                metric_data = redis_client.hgetall(key)
+                if metric_data:
+                    metrics_history.append(metric_data)
+        
+        # Calculate aggregates
+        if metrics_history:
+            avg_accuracy = sum(float(m.get("accuracy", 0)) for m in metrics_history) / len(metrics_history)
+            avg_safety = sum(float(m.get("safety_score", 0)) for m in metrics_history) / len(metrics_history)
+            avg_latency_p95 = sum(float(m.get("latency_p95", 0)) for m in metrics_history) / len(metrics_history)
+            avg_error_rate = sum(float(m.get("error_rate", 0)) for m in metrics_history) / len(metrics_history)
+        else:
+            avg_accuracy = avg_safety = avg_latency_p95 = avg_error_rate = 0.0
+        
+        return {
+            "service": service,
+            "time_range_hours": hours,
+            "data_points": len(metrics_history),
+            "aggregates": {
+                "avg_accuracy": round(avg_accuracy, 4),
+                "avg_safety_score": round(avg_safety, 4),
+                "avg_latency_p95_ms": round(avg_latency_p95, 2),
+                "avg_error_rate_pct": round(avg_error_rate, 2)
+            },
+            "history": metrics_history[-100:]  # Last 100 data points
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get separated metrics", service=service, error=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to get metrics: {str(e)}")
 
 # Startup event
 @app.on_event("startup")

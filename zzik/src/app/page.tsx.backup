@@ -1,0 +1,235 @@
+import Script from "next/script";
+
+export default function Home() {
+  return (
+    <>
+      <main className="min-h-dvh bg-[var(--surface-900)] text-[var(--text)]">
+        {/* Skip Link */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-[var(--emerald-500)] focus:text-[#06110c]"
+        >
+          본문으로 건너뛰기
+        </a>
+
+        {/* Navigation */}
+        <header className="container mx-auto max-w-screen-2xl px-6 py-5 flex items-center justify-between hairline">
+          <div className="flex items-center gap-3">
+            <div
+              className="h-8 w-8 rounded-xl bg-[var(--emerald-500)]"
+              aria-hidden="true"
+            ></div>
+            <span className="text-sm opacity-80 tracking-tight">ZZMUK</span>
+          </div>
+          <nav
+            className="hidden md:flex items-center gap-6"
+            aria-label="주요 메뉴"
+          >
+            <a className="opacity-80 hover:opacity-100 transition" href="#features">
+              Features
+            </a>
+            <a className="opacity-80 hover:opacity-100 transition" href="#showcase">
+              Showcase
+            </a>
+            <a className="opacity-80 hover:opacity-100 transition" href="#chat">
+              Chat
+            </a>
+            <button className="btn btn-cta">Get started</button>
+          </nav>
+        </header>
+
+        {/* Hero Section */}
+        <section
+          id="main"
+          className="container mx-auto max-w-screen-2xl px-6 py-16 grid grid-cols-1 md:grid-cols-12 gap-8"
+        >
+          <div className="md:col-span-5 flex flex-col gap-5 justify-center">
+            <span className="badge">3km · 오늘 정산</span>
+            <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
+              로컬 숏폼{" "}
+              <span className="text-[var(--emerald-500)]">즉시 매칭</span>
+            </h1>
+            <p className="opacity-80 max-w-prose">
+              찍고 올리고 승인되면 바로 정산. ZZMUK은 근처 크리에이터와 상점을 5분
+              내 연결합니다.
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              <button className="btn btn-cta">무료로 시작</button>
+              <button className="btn">라이브 데모</button>
+            </div>
+            <div className="divider-x my-6"></div>
+            <dl className="grid grid-cols-3 gap-4">
+              <div>
+                <dt className="opacity-70 text-sm">당일 정산</dt>
+                <dd className="text-2xl font-semibold">T+0</dd>
+              </div>
+              <div>
+                <dt className="opacity-70 text-sm">매칭 SLA</dt>
+                <dd className="text-2xl font-semibold">5분</dd>
+              </div>
+              <div>
+                <dt className="opacity-70 text-sm">대비 게이트</dt>
+                <dd className="text-2xl font-semibold">≥4.5:1</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="md:col-span-7 relative">
+            <div
+              className="absolute -inset-6 rounded-[28px] opacity-40 blur-3xl bg-[radial-gradient(60%_50%_at_30%_20%,_rgba(34,192,142,.25),transparent_60%)]"
+              aria-hidden="true"
+            ></div>
+            <div className="glass relative p-6 md:p-8">
+              <div className="skeleton h-64 md:h-80 mb-4"></div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="skeleton h-24"></div>
+                <div className="skeleton h-24"></div>
+                <div className="skeleton h-24"></div>
+              </div>
+              <div className="hairline mt-6 pt-6 grid grid-cols-2 gap-4">
+                <div className="skeleton h-10"></div>
+                <div className="skeleton h-10"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section
+          id="features"
+          className="container mx-auto max-w-screen-2xl px-6 py-16"
+        >
+          <div className="grid md:grid-cols-3 gap-6">
+            <article className="relative p-6 border border-[var(--stroke)] rounded-2xl card-3d">
+              <h3 className="text-lg font-semibold mb-2">즉시 매칭</h3>
+              <p className="opacity-75 text-sm">
+                반경·가게 가중치·과거 성과 기반 실시간 후보 10명.
+              </p>
+              <div className="divider-x my-4"></div>
+              <div className="skeleton h-20"></div>
+            </article>
+            <article className="relative p-6 border border-[var(--stroke)] rounded-2xl card-3d">
+              <h3 className="text-lg font-semibold mb-2">정책/리스크 가드</h3>
+              <p className="opacity-75 text-sm">
+                콘텐츠·위치·결제 규칙 자동 검증.
+              </p>
+              <div className="divider-x my-4"></div>
+              <div className="skeleton h-20"></div>
+            </article>
+            <article className="relative p-6 border border-[var(--stroke)] rounded-2xl card-3d">
+              <h3 className="text-lg font-semibold mb-2">T+0 정산</h3>
+              <p className="opacity-75 text-sm">
+                승인 즉시 정산, 창구 비용↓ 체감↑.
+              </p>
+              <div className="divider-x my-4"></div>
+              <div className="skeleton h-20"></div>
+            </article>
+          </div>
+        </section>
+
+        {/* Showcase Section */}
+        <section
+          id="showcase"
+          className="container mx-auto max-w-screen-2xl px-6 py-16"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="md:col-span-4">
+              <h2 className="text-2xl font-semibold mb-2">실제 흐름</h2>
+              <p className="opacity-75 text-sm">
+                캠페인 생성 → 매칭 → 업로드 → 승인/정산.
+              </p>
+            </div>
+            <div className="md:col-span-8 grid grid-cols-2 gap-4">
+              <div className="skeleton h-40"></div>
+              <div className="skeleton h-40"></div>
+              <div className="skeleton h-40"></div>
+              <div className="skeleton h-40"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="container mx-auto max-w-screen-2xl px-6 py-16">
+          <div className="glass p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-semibold">오늘 찍고, 오늘 정산</h3>
+              <p className="opacity-75 text-sm">
+                3 km 로컬 숏폼 미션을 지금 시작하세요.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button className="btn btn-cta">무료 시작</button>
+              <button className="btn">문의</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Chat Section */}
+        <section
+          id="chat"
+          className="container mx-auto max-w-screen-2xl px-6 pb-20"
+        >
+          <div className="glass p-0 overflow-hidden">
+            {/* Chat Header */}
+            <header className="px-6 py-4 hairline">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold tracking-tight">
+                  챗 · 미리보기
+                </h2>
+                <span className="badge">베타</span>
+              </div>
+            </header>
+
+            {/* Chat Log */}
+            <div
+              id="chat-log"
+              className="px-6 py-4 space-y-4 h-[46vh] md:h-[52vh] overflow-auto"
+              role="log"
+              aria-live="polite"
+              aria-label="채팅 메시지"
+            >
+              {/* Initial Skeletons */}
+              <div className="skeleton h-16" aria-hidden="true"></div>
+              <div className="skeleton h-10 w-2/3" aria-hidden="true"></div>
+            </div>
+
+            {/* Chat Input */}
+            <form id="chat-form" className="hairline px-4 pt-4 pb-5">
+              <div className="flex items-end gap-3">
+                <label htmlFor="chat-input" className="sr-only">
+                  메시지 입력
+                </label>
+                <textarea
+                  id="chat-input"
+                  rows={2}
+                  required
+                  className="flex-1 resize-none rounded-xl bg-transparent border border-[var(--stroke)] px-3 py-2
+                             outline-none focus-visible:ring-1 focus-visible:ring-[var(--emerald-500)]"
+                  placeholder="무엇이든 물어보세요 (엔터=전송, Shift+엔터=줄바꿈)"
+                  aria-describedby="chat-help"
+                ></textarea>
+                <button className="btn btn-cta" type="submit">
+                  전송
+                </button>
+              </div>
+              <p id="chat-help" className="mt-2 text-xs opacity-60">
+                실험기능 · 응답은 스트리밍으로 표시됩니다.
+              </p>
+              <noscript className="block mt-2 text-xs text-red-300">
+                자바스크립트를 활성화해야 채팅이 동작합니다.
+              </noscript>
+            </form>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="container mx-auto max-w-screen-2xl px-6 py-12 opacity-70 text-sm">
+          <p>© ZZMUK — local short-form missions</p>
+        </footer>
+      </main>
+
+      {/* Chat Client Script */}
+      <Script src="/chat.js" strategy="afterInteractive" />
+    </>
+  );
+}

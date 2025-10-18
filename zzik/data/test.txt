@@ -1,0 +1,9 @@
+ZZIK v7 MCP Server Test File
+
+This file is used to verify that the MCP server can read files correctly.
+
+Test Data:
+- Location: 서울시 강남구 역삼동
+- Category: 음식점 (카페/베이커리)
+- Creator: @qetta_t
+- Verified: true

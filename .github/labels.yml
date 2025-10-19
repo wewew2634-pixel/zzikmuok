@@ -1,0 +1,19 @@
+labels:
+  - name: design
+    color: 1abc9c
+    description: Design-related work
+  - name: bug
+    color: d73a4a
+    description: Something isn't working
+  - name: feature
+    color: a2eeef
+    description: New feature or enhancement
+  - name: needs-triage
+    color: fbca04
+    description: Awaiting initial triage
+  - name: a11y
+    color: 5319e7
+    description: Accessibility-related change
+  - name: docs
+    color: 0075ca
+    description: Documentation updates

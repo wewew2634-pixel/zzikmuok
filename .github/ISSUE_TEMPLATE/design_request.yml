@@ -1,0 +1,58 @@
+name: "🎨 Design Request"
+description: Request UX/UI/visual design work
+title: "[Design] <short summary>"
+labels: ["design", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide enough context, links, and constraints for designers to start.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What’s the goal and user impact?
+      placeholder: e.g., Redesign checkout to improve conversion on mobile.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Background
+      description: Problem statement, metrics, research, related issues.
+    validations:
+      required: false
+  - type: input
+    id: figma
+    attributes:
+      label: Figma file / exploration
+      description: Link to Figma or design explorations.
+      placeholder: https://www.figma.com/file/...
+    validations:
+      required: false
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: Screens, flows, components, assets expected.
+    validations:
+      required: false
+  - type: input
+    id: due
+    attributes:
+      label: Target date
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 (urgent)
+        - P1 (high)
+        - P2 (normal)
+        - P3 (low)
+    validations:
+      required: false

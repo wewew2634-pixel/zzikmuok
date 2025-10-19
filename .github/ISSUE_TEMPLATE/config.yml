@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Design guidelines
+    url: https://example.com/design-system
+    about: Reference the design system and component usage.

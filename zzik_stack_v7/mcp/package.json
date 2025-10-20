@@ -1,0 +1,14 @@
+{
+  "name": "zzik-mcp",
+  "version": "1.0.0",
+  "description": "ZZIK Model Context Protocol server",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "sqlite": "^5.1.6",
+    "sqlite3": "^5.1.7"
+  }
+}

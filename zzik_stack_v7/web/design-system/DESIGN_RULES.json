@@ -1,0 +1,628 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ZZIK Design System Rules - Dark Frosted Linear 2025",
+  "version": "2.0.0",
+  "lastUpdated": "2025-10-18",
+  "description": "Unified design system: Linear 2025 structure + Dark Purple premium colors + Glassmorphism",
+  
+  "colorPalette": {
+    "primary": {
+      "background": {
+        "base": {
+          "value": "#0a0a0f",
+          "variable": "bg-[#0a0a0f]",
+          "tolerance": 3,
+          "description": "Deep dark gradient base - 모든 페이지의 기본 배경"
+        },
+        "raised": {
+          "value": "#12121a",
+          "variable": "bg-[#12121a]",
+          "tolerance": 3,
+          "description": "약간 올라간 요소"
+        },
+        "elevated": {
+          "value": "#1a1a25",
+          "variable": "bg-[#1a1a25]",
+          "tolerance": 3,
+          "description": "떠있는 요소 (모달, 드롭다운)"
+        }
+      },
+      "frostedGlass": {
+        "light": {
+          "value": "rgba(26, 26, 37, 0.7)",
+          "variable": "--color-surface-frosted-light",
+          "blur": "16px",
+          "saturation": "180%",
+          "description": "가벼운 프로스티드 글라스 - 카드, 패널"
+        },
+        "medium": {
+          "value": "rgba(26, 26, 37, 0.85)",
+          "variable": "--color-surface-frosted-medium",
+          "blur": "24px",
+          "saturation": "200%",
+          "description": "중간 프로스티드 글라스 - 네비게이션, 모달"
+        },
+        "strong": {
+          "value": "rgba(26, 26, 37, 0.95)",
+          "variable": "--color-surface-frosted-strong",
+          "blur": "32px",
+          "saturation": "220%",
+          "description": "강한 프로스티드 글라스 - 헤더, 시트"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "rgba(255, 255, 255, 0.95)",
+          "variable": "text-white/95",
+          "tolerance": 5,
+          "minContrast": 12.5,
+          "description": "메인 텍스트 - 제목, 본문 (dark bg에서 high contrast)"
+        },
+        "secondary": {
+          "value": "rgba(255, 255, 255, 0.65)",
+          "variable": "text-white/65",
+          "tolerance": 5,
+          "minContrast": 7.0,
+          "description": "보조 텍스트 - 설명, 캡션"
+        },
+        "tertiary": {
+          "value": "rgba(255, 255, 255, 0.40)",
+          "variable": "text-white/40",
+          "tolerance": 5,
+          "minContrast": 4.5,
+          "description": "비활성 텍스트 - 플레이스홀더"
+        }
+      },
+      "accent": {
+        "primary": {
+          "value": "#7c4dff",
+          "variable": "bg-[#7c4dff]",
+          "tolerance": 0,
+          "description": "주요 액션 - CTA 버튼, 링크 (Deep Purple)"
+        },
+        "hover": {
+          "value": "#9575ff",
+          "variable": "bg-[#9575ff]",
+          "tolerance": 0,
+          "description": "호버 상태 (Lighter Purple)"
+        },
+        "active": {
+          "value": "#5e35b1",
+          "variable": "bg-[#5e35b1]",
+          "tolerance": 0,
+          "description": "액티브 상태 (Darker Purple)"
+        },
+        "light": {
+          "value": "#b39dff",
+          "variable": "bg-[#b39dff]",
+          "tolerance": 0,
+          "description": "연한 액센트"
+        },
+        "glow": {
+          "value": "rgba(124, 77, 255, 0.5)",
+          "description": "Purple glow effect"
+        }
+      },
+      "border": {
+        "primary": {
+          "value": "rgba(124, 77, 255, 0.15)",
+          "variable": "border-[rgba(124,77,255,0.15)]",
+          "tolerance": 0,
+          "description": "주요 테두리 (Purple accent)"
+        },
+        "secondary": {
+          "value": "rgba(255, 255, 255, 0.08)",
+          "variable": "border-white/8",
+          "tolerance": 0,
+          "description": "보조 테두리 (미묘함)"
+        },
+        "glow": {
+          "value": "rgba(124, 77, 255, 0.3)",
+          "description": "Glow border on hover"
+        }
+      }
+    },
+    "status": {
+      "success": {
+        "value": "#00e676",
+        "description": "성공 메시지"
+      },
+      "warning": {
+        "value": "#ffd600",
+        "description": "경고 메시지"
+      },
+      "error": {
+        "value": "#ff3d00",
+        "description": "에러 메시지"
+      },
+      "info": {
+        "value": "#00b8d4",
+        "description": "정보 메시지"
+      }
+    },
+    "forbidden": {
+      "colors": [],
+      "description": "Dark purple premium system - no forbidden colors (all status colors allowed)"
+    }
+  },
+  
+  "typography": {
+    "fontFamily": {
+      "primary": {
+        "name": "SF Pro Text / Roboto / Inter",
+        "variable": "font-sans",
+        "stack": "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', 'Inter', ui-sans-serif",
+        "weights": [400, 500, 600, 700],
+        "description": "Native platform fonts for optimal rendering"
+      },
+      "display": {
+        "name": "SF Pro Display / Roboto / Inter",
+        "variable": "font-display",
+        "stack": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Roboto', 'Inter', ui-sans-serif"
+      },
+      "mono": {
+        "name": "SF Mono / Roboto Mono",
+        "variable": "font-mono",
+        "stack": "'SF Mono', 'Roboto Mono', 'Courier New', monospace"
+      }
+    },
+    "scale": {
+      "xs": {
+        "size": "0.75rem",
+        "lineHeight": "1rem",
+        "variable": "text-xs",
+        "usage": "작은 라벨, 캡션 (12px)"
+      },
+      "sm": {
+        "size": "0.875rem",
+        "lineHeight": "1.25rem",
+        "variable": "text-sm",
+        "usage": "작은 텍스트, 버튼 (14px)"
+      },
+      "base": {
+        "size": "1rem",
+        "lineHeight": "1.5rem",
+        "variable": "text-base",
+        "usage": "본문 텍스트 (16px)"
+      },
+      "lg": {
+        "size": "1.125rem",
+        "lineHeight": "1.75rem",
+        "variable": "text-lg",
+        "usage": "큰 본문 (18px)"
+      },
+      "xl": {
+        "size": "1.25rem",
+        "lineHeight": "1.75rem",
+        "variable": "text-xl",
+        "usage": "소제목 (20px)"
+      },
+      "2xl": {
+        "size": "1.5rem",
+        "lineHeight": "2rem",
+        "variable": "text-2xl",
+        "usage": "중간 제목 (24px)"
+      },
+      "3xl": {
+        "size": "1.875rem",
+        "lineHeight": "2.25rem",
+        "variable": "text-3xl",
+        "usage": "큰 제목 (30px)"
+      },
+      "4xl": {
+        "size": "2.25rem",
+        "lineHeight": "2.5rem",
+        "variable": "text-4xl",
+        "usage": "매우 큰 제목 (36px)"
+      }
+    },
+    "weights": {
+      "normal": {
+        "value": 400,
+        "variable": "font-normal",
+        "usage": "본문"
+      },
+      "medium": {
+        "value": 500,
+        "variable": "font-medium",
+        "usage": "약간 강조"
+      },
+      "semibold": {
+        "value": 600,
+        "variable": "font-semibold",
+        "usage": "제목, 버튼"
+      },
+      "bold": {
+        "value": 700,
+        "variable": "font-bold",
+        "usage": "강한 제목"
+      }
+    }
+  },
+  
+  "spacing": {
+    "system": "8pt-grid",
+    "base": 8,
+    "scale": {
+      "1": "0.25rem",
+      "2": "0.5rem",
+      "3": "0.75rem",
+      "4": "1rem",
+      "5": "1.25rem",
+      "6": "1.5rem",
+      "8": "2rem",
+      "10": "2.5rem",
+      "12": "3rem",
+      "16": "4rem"
+    },
+    "rules": {
+      "minimum": "0.5rem",
+      "preferred": ["1rem", "1.5rem", "2rem", "3rem"],
+      "description": "8pt grid 기반 간격만 사용"
+    }
+  },
+  
+  "components": {
+    "button": {
+      "primary": {
+        "height": {
+          "min": 48,
+          "max": 56,
+          "preferred": 48,
+          "unit": "px",
+          "tolerance": 0,
+          "variable": "--button-height-lg",
+          "reason": "WCAG 2.1 AA - 터치 타겟 최소 48px (preferred)"
+        },
+        "padding": {
+          "horizontal": {
+            "min": "1.5rem",
+            "max": "2rem",
+            "preferred": "2rem",
+            "variable": "px-8"
+          }
+        },
+        "radius": {
+          "value": "1rem",
+          "variable": "rounded-xl",
+          "tolerance": "0.25rem"
+        },
+        "fontSize": {
+          "preferred": "1rem",
+          "variable": "text-base"
+        },
+        "fontWeight": {
+          "value": 600,
+          "variable": "font-semibold"
+        },
+        "colors": {
+          "background": "#7c4dff",
+          "text": "rgba(255, 255, 255, 0.98)",
+          "hover": {
+            "background": "#9575ff"
+          },
+          "active": {
+            "background": "#5e35b1"
+          }
+        },
+        "shadow": {
+          "default": "shadow-sm",
+          "hover": "shadow-md + glow"
+        },
+        "transition": {
+          "duration": "200ms",
+          "easing": "cubic-bezier(0, 0, 0.2, 1)"
+        }
+      },
+      "heights": {
+        "sm": {
+          "value": 36,
+          "unit": "px",
+          "variable": "--button-height-sm",
+          "usage": "Compact buttons (non-primary actions)"
+        },
+        "md": {
+          "value": 44,
+          "unit": "px",
+          "variable": "--button-height-md",
+          "usage": "WCAG minimum (mobile secondary)"
+        },
+        "lg": {
+          "value": 48,
+          "unit": "px",
+          "variable": "--button-height-lg",
+          "usage": "WCAG preferred (all primary buttons)"
+        },
+        "xl": {
+          "value": 56,
+          "unit": "px",
+          "variable": "--button-height-xl",
+          "usage": "Large touch targets"
+        }
+      }
+    },
+    "card": {
+      "padding": {
+        "min": "1.5rem",
+        "max": "2rem",
+        "preferred": "1.5rem",
+        "variable": "p-6"
+      },
+      "radius": {
+        "value": "0.75rem",
+        "variable": "rounded-lg",
+        "description": "카드는 rounded-lg (12px) - Linear standard"
+      },
+      "border": {
+        "width": "1px",
+        "color": "rgba(255, 255, 255, 0.08)",
+        "variable": "border border-white/8"
+      },
+      "background": {
+        "default": "frosted-light",
+        "elevated": "frosted-medium",
+        "description": "Use frosted glass utilities"
+      },
+      "hover": {
+        "transform": "translateY(-2px)",
+        "shadow": "shadow-md"
+      }
+    },
+    "input": {
+      "height": {
+        "min": 40,
+        "max": 48,
+        "preferred": 44,
+        "unit": "px",
+        "variable": "h-11"
+      },
+      "padding": {
+        "horizontal": "0.75rem",
+        "variable": "px-3"
+      },
+      "radius": {
+        "value": "0.75rem",
+        "variable": "rounded-lg"
+      },
+      "border": {
+        "default": {
+          "width": "1px",
+          "color": "rgba(255, 255, 255, 0.08)"
+        },
+        "focus": {
+          "width": "2px",
+          "color": "#7c4dff",
+          "glow": "0 0 0 4px rgba(124, 77, 255, 0.2)"
+        }
+      }
+    }
+  },
+  
+  "glassmorphism": {
+    "blur": {
+      "light": "8px",
+      "medium": "16px",
+      "strong": "24px",
+      "extra": "32px"
+    },
+    "saturation": {
+      "light": "180%",
+      "medium": "200%",
+      "strong": "220%"
+    },
+    "opacity": {
+      "light": 0.7,
+      "medium": 0.85,
+      "strong": 0.95
+    },
+    "utilities": {
+      "frosted-light": {
+        "background": "rgba(26, 26, 37, 0.7)",
+        "blur": "16px",
+        "saturation": "180%"
+      },
+      "frosted-medium": {
+        "background": "rgba(26, 26, 37, 0.85)",
+        "blur": "24px",
+        "saturation": "200%"
+      },
+      "frosted-strong": {
+        "background": "rgba(26, 26, 37, 0.95)",
+        "blur": "32px",
+        "saturation": "220%"
+      }
+    }
+  },
+  
+  "shadows": {
+    "depth": {
+      "xs": {
+        "value": "0 1px 2px 0 rgba(0, 0, 0, 0.4)",
+        "usage": "Minimal elevation"
+      },
+      "sm": {
+        "value": "0 2px 8px 0 rgba(0, 0, 0, 0.4)",
+        "usage": "Cards, buttons"
+      },
+      "md": {
+        "value": "0 4px 16px 0 rgba(0, 0, 0, 0.5)",
+        "usage": "Dropdowns, popovers"
+      },
+      "lg": {
+        "value": "0 8px 32px 0 rgba(0, 0, 0, 0.6)",
+        "usage": "Modals, sheets"
+      },
+      "xl": {
+        "value": "0 16px 48px 0 rgba(0, 0, 0, 0.7)",
+        "usage": "Maximum depth"
+      }
+    },
+    "glow": {
+      "default": {
+        "value": "0 0 24px 0 rgba(124, 77, 255, 0.4)",
+        "usage": "Accent glow"
+      },
+      "strong": {
+        "value": "0 0 40px 0 rgba(124, 77, 255, 0.6)",
+        "usage": "Strong glow on hover"
+      }
+    },
+    "combined": {
+      "description": "Use depth + glow for premium 3D effect",
+      "example": "shadow-md + glow"
+    }
+  },
+  
+  "accessibility": {
+    "wcag": {
+      "level": "AA",
+      "version": "2.1"
+    },
+    "contrast": {
+      "normalText": {
+        "min": 4.5,
+        "actual": 12.5,
+        "description": "White text on dark background - excellent contrast"
+      },
+      "largeText": {
+        "min": 3.0,
+        "actual": 12.5,
+        "description": "All text exceeds requirements"
+      }
+    },
+    "touchTargets": {
+      "minimum": {
+        "width": 44,
+        "height": 44,
+        "unit": "px",
+        "description": "WCAG 2.1 minimum"
+      },
+      "preferred": {
+        "width": 48,
+        "height": 48,
+        "unit": "px",
+        "description": "All primary buttons use 48px"
+      },
+      "large": {
+        "width": 56,
+        "height": 56,
+        "unit": "px",
+        "description": "Large touch targets for FAB, important CTAs"
+      }
+    },
+    "focusVisible": {
+      "required": true,
+      "style": {
+        "outline": "2px solid #7c4dff",
+        "outlineOffset": "2px",
+        "glow": "0 0 0 4px rgba(124, 77, 255, 0.2)",
+        "description": "Purple glow focus indicator"
+      }
+    }
+  },
+  
+  "mobileOptimization": {
+    "safeAreas": {
+      "top": "env(safe-area-inset-top, 0)",
+      "right": "env(safe-area-inset-right, 0)",
+      "bottom": "env(safe-area-inset-bottom, 0)",
+      "left": "env(safe-area-inset-left, 0)",
+      "utilities": {
+        "safe-area-top": "padding-top: var(--safe-area-top)",
+        "safe-area-bottom": "padding-bottom: var(--safe-area-bottom)",
+        "safe-area-inset": "all safe areas applied"
+      }
+    },
+    "navigationBars": {
+      "ios": {
+        "height": "44px",
+        "variable": "--nav-bar-height-ios"
+      },
+      "android": {
+        "height": "56px",
+        "variable": "--nav-bar-height-android"
+      },
+      "tabBar": {
+        "height": "48px",
+        "variable": "--tab-bar-height"
+      }
+    },
+    "fab": {
+      "size": "56px",
+      "iconSize": "24px",
+      "description": "Floating Action Button - Fixed position, 56×56px"
+    }
+  },
+  
+  "animation": {
+    "duration": {
+      "instant": "0ms",
+      "fast": "150ms",
+      "normal": "200ms",
+      "slow": "300ms",
+      "slower": "500ms"
+    },
+    "easing": {
+      "linear": "cubic-bezier(0, 0, 1, 1)",
+      "in": "cubic-bezier(0.4, 0, 1, 1)",
+      "out": "cubic-bezier(0, 0, 0.2, 1)",
+      "inOut": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+    },
+    "preferred": {
+      "button": {
+        "duration": "200ms",
+        "easing": "ease-out",
+        "properties": ["background-color", "transform", "box-shadow"]
+      },
+      "card": {
+        "duration": "300ms",
+        "easing": "ease-out",
+        "properties": ["transform", "box-shadow", "border-color"]
+      }
+    }
+  },
+  
+  "validation": {
+    "critical": [
+      "button-height-48px-minimum",
+      "text-contrast-12.5-to-1-achieved",
+      "touch-target-48px-preferred",
+      "card-radius-12px-lg",
+      "frosted-glass-blur-applied"
+    ],
+    "high": [
+      "native-font-stack-used",
+      "focus-visible-purple-glow",
+      "safe-area-insets-applied",
+      "8pt-grid-spacing",
+      "purple-accent-consistent"
+    ],
+    "testExpectations": {
+      "buttonHeight": {
+        "min": 48,
+        "max": 56,
+        "tolerance": 0
+      },
+      "textContrast": {
+        "min": 4.5,
+        "expected": 12.5
+      },
+      "cardRadius": {
+        "value": 12,
+        "unit": "px",
+        "tolerance": 1
+      },
+      "backgroundColor": {
+        "value": "#0a0a0f",
+        "tolerance": 3,
+        "description": "Dark gradient base"
+      },
+      "textColor": {
+        "value": "rgba(255, 255, 255, 0.95)",
+        "tolerance": 5,
+        "description": "High contrast white on dark"
+      }
+    }
+  }
+}

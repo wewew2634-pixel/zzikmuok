@@ -1,0 +1,389 @@
+/**
+ * Linear 2025 Frosted Glass Components
+ * 100% Benchmarked from Linear Mobile App (Oct 16, 2025)
+ */
+
+/* ===== BASE FROSTED GLASS UTILITIES ===== */
+
+.frosted-light {
+  background: var(--surface-frosted-light);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  border: 1px solid var(--border-subtle);
+}
+
+.frosted-medium {
+  background: var(--surface-frosted-medium);
+  backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  border: 1px solid var(--border-medium);
+}
+
+.frosted-strong {
+  background: var(--surface-frosted-strong);
+  backdrop-filter: blur(var(--blur-strong)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(200%);
+  border: 1px solid var(--border-strong);
+}
+
+/* Dark Mode Variants */
+@media (prefers-color-scheme: dark) {
+  .frosted-light {
+    background: var(--surface-frosted-dark-light);
+    border-color: var(--border-subtle-dark);
+  }
+  
+  .frosted-medium {
+    background: var(--surface-frosted-dark-medium);
+    border-color: var(--border-medium-dark);
+  }
+  
+  .frosted-strong {
+    background: var(--surface-frosted-dark-strong);
+    border-color: var(--border-medium-dark);
+  }
+}
+
+/* ===== NAVIGATION BARS (Native Platform Style) ===== */
+
+.nav-bar-ios {
+  height: calc(var(--nav-bar-height-ios) + var(--safe-area-top));
+  padding-top: var(--safe-area-top);
+  backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  background: var(--surface-frosted-medium);
+  border-bottom: 0.5px solid var(--border-subtle);
+}
+
+.nav-bar-android {
+  height: var(--nav-bar-height-android);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  background: var(--surface-frosted-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-bar {
+  height: calc(var(--tab-bar-height) + var(--safe-area-bottom));
+  padding-bottom: var(--safe-area-bottom);
+  backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  background: var(--surface-frosted-medium);
+  border-top: 0.5px solid var(--border-subtle);
+}
+
+/* ===== CARDS (Frosted Glass Containers) ===== */
+
+.card-frosted {
+  background: var(--surface-frosted-light);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--ease-out);
+}
+
+.card-frosted:hover {
+  background: var(--surface-frosted-medium);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.card-frosted-elevated {
+  background: var(--surface-elevated);
+  backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-medium)) saturate(180%);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== BUTTONS (Linear Mobile Style) ===== */
+
+.btn-primary {
+  height: var(--button-height-lg);
+  padding: 0 var(--space-6);
+  background: var(--accent-primary);
+  color: white;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-md);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  background: var(--accent-active);
+  transform: translateY(0);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-secondary {
+  height: var(--button-height-lg);
+  padding: 0 var(--space-6);
+  background: var(--surface-frosted-light);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-normal) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--surface-frosted-medium);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  background: var(--surface-frosted-strong);
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  height: var(--button-height-md);
+  padding: 0 var(--space-4);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: var(--surface-frosted-light);
+  color: var(--text-primary);
+}
+
+.btn-ghost:active {
+  background: var(--surface-frosted-medium);
+}
+
+/* ===== LIST ITEMS (Mobile-optimized) ===== */
+
+.list-item {
+  display: flex;
+  align-items: center;
+  min-height: var(--list-item-height-default);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-frosted-light);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  border-bottom: 0.5px solid var(--border-subtle);
+  transition: background var(--transition-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background: var(--surface-frosted-medium);
+}
+
+.list-item:active {
+  background: var(--surface-frosted-strong);
+}
+
+.list-item-compact {
+  min-height: var(--list-item-height-compact);
+  padding: var(--space-2) var(--space-4);
+}
+
+.list-item-large {
+  min-height: var(--list-item-height-large);
+  padding: var(--space-4) var(--space-4);
+}
+
+/* ===== FLOATING ACTION BUTTON ===== */
+
+.fab {
+  position: fixed;
+  bottom: calc(var(--space-6) + var(--safe-area-bottom));
+  right: var(--space-4);
+  width: var(--fab-size);
+  height: var(--fab-size);
+  background: var(--accent-primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-xl);
+  transition: all var(--transition-normal) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  z-index: var(--z-fixed);
+}
+
+.fab:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+  box-shadow: 0 16px 32px 0 rgba(99, 102, 241, 0.3);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab svg {
+  width: var(--fab-icon);
+  height: var(--fab-icon);
+  color: white;
+}
+
+/* ===== AVATARS ===== */
+
+.avatar {
+  width: var(--avatar-md);
+  height: var(--avatar-md);
+  border-radius: var(--radius-full);
+  background: var(--surface-frosted-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar-xs { width: var(--avatar-xs); height: var(--avatar-xs); }
+.avatar-sm { width: var(--avatar-sm); height: var(--avatar-sm); }
+.avatar-lg { width: var(--avatar-lg); height: var(--avatar-lg); }
+.avatar-xl { width: var(--avatar-xl); height: var(--avatar-xl); }
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== MODALS & SHEETS (Mobile Bottom Sheets) ===== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(var(--blur-light));
+  -webkit-backdrop-filter: blur(var(--blur-light));
+  z-index: var(--z-modal-backdrop);
+  animation: fadeIn var(--transition-normal) var(--ease-out);
+}
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 90vh;
+  background: var(--surface-elevated);
+  backdrop-filter: blur(var(--blur-strong)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--blur-strong)) saturate(200%);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  padding: var(--space-4);
+  padding-bottom: calc(var(--space-6) + var(--safe-area-bottom));
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-modal);
+  animation: slideUp var(--transition-normal) var(--ease-out);
+}
+
+.bottom-sheet-handle {
+  width: 2.5rem;
+  height: 0.25rem;
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+  margin: 0 auto var(--space-4);
+}
+
+/* ===== INPUT FIELDS (Frosted Glass) ===== */
+
+.input-frosted {
+  height: var(--button-height-lg);
+  padding: 0 var(--space-4);
+  background: var(--surface-frosted-light);
+  backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-light)) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  transition: all var(--transition-fast) var(--ease-out);
+}
+
+.input-frosted:focus {
+  outline: none;
+  background: var(--surface-elevated);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.input-frosted::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE UTILITIES ===== */
+
+@media (max-width: 640px) {
+  .card-frosted {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+  }
+  
+  .card-frosted-elevated {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .fab {
+    bottom: calc(var(--space-8) + var(--safe-area-bottom));
+    right: var(--space-6);
+  }
+}

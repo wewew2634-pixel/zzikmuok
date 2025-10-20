@@ -1,0 +1,95 @@
+{
+  email admin@zzik.example
+  servers {
+    protocols h1 h2
+  }
+}
+
+{$DOMAIN_APP} {
+  encode zstd gzip
+  
+  # Static asset optimization
+  @static path_regexp ^/(?:_next|assets|favicon\.ico|robots\.txt)
+  
+  # Reverse proxy to Next.js app
+  reverse_proxy web:3000 {
+    # Health check
+    health_uri /api/health
+    health_interval 10s
+    health_timeout 5s
+    
+    # Load balancing (for multi-instance deployment)
+    lb_policy least_conn
+  }
+  
+  # Security Headers (Phase 6: Comprehensive CSP + Security)
+  header {
+    # HTTPS Enforcement (HSTS)
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Content-Security-Policy (CSP) - Phase 6 Enhanced
+    # Prevents XSS, clickjacking, and unauthorized resource loading
+    Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; connect-src 'self' https://{$DOMAIN_MCP} https://graph.instagram.com https://api.instagram.com https://open.tiktokapis.com https://www.tiktok.com wss://*.vercel.live; img-src 'self' data: blob: https://scontent.cdninstagram.com https://instagram.*.fbcdn.net https://*.tiktokcdn.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+    
+    # Clickjacking Protection
+    X-Frame-Options "DENY"
+    
+    # XSS Protection (legacy browsers)
+    X-XSS-Protection "1; mode=block"
+    
+    # MIME Type Sniffing Protection
+    X-Content-Type-Options "nosniff"
+    
+    # Referrer Policy (privacy)
+    Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Permissions Policy (restrict browser features)
+    Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+    
+    # Remove server signature
+    -Server
+    
+    # CORS (only for API routes, handled by Next.js middleware)
+    # Access-Control-Allow-Origin is intentionally NOT set here
+    # Let Next.js API routes handle CORS per-endpoint
+  }
+  
+  # Rate Limiting (basic protection, app-level rate limiting in middleware)
+  @api path /api/*
+  handle @api {
+    # Log API requests for monitoring
+    log {
+      output file /var/log/caddy/api_access.log
+      format json
+    }
+    reverse_proxy web:3000
+  }
+  
+  # Health Check Endpoint (exclude from access logs)
+  @health path /api/health
+  handle @health {
+    reverse_proxy web:3000
+    log {
+      output discard
+    }
+  }
+  
+  # OAuth Callback (special logging for security auditing)
+  @oauth path /oauth/callback
+  handle @oauth {
+    log {
+      output file /var/log/caddy/oauth_access.log
+      format json
+    }
+    reverse_proxy web:3000
+  }
+}
+
+{$DOMAIN_MCP} {
+  reverse_proxy mcp:8080
+  header {
+    Access-Control-Allow-Origin https://{$DOMAIN_APP}
+    Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Access-Control-Allow-Headers "content-type, authorization"
+  }
+}

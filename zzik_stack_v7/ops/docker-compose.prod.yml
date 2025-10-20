@@ -1,0 +1,54 @@
+version: "3.9"
+name: zzik-v7
+services:
+  web:
+    build: ../web
+    env_file: ./.env.prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/health.txt"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  mcp:
+    build: ../mcp
+    env_file: ./.env.prod
+    volumes:
+      - mcp-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -u \"$BASIC_AUTH_USER:$BASIC_AUTH_PASS\" http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  agents:
+    build: ../agents
+    env_file: ./.env.prod
+    restart: unless-stopped
+    depends_on:
+      - web
+    profiles: [agents]
+
+  caddy:
+    image: caddy:2
+    depends_on:
+      - web
+      - mcp
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN_APP: ${DOMAIN_APP}
+      DOMAIN_MCP: ${DOMAIN_MCP}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+
+volumes:
+  caddy-data:
+  caddy-config:
+  mcp-data:

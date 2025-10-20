@@ -1,0 +1,191 @@
+/**
+ * Linear 2025 Mobile Design System - 100% Benchmarked
+ * Source: Linear Mobile App Redesign (Oct 16, 2025)
+ * Frosted Glass Material + Native Platform Conventions
+ */
+
+@theme {
+  /* ===== COLOR SYSTEM (Linear 2025 Mobile) ===== */
+  
+  /* Surface - Frosted Glass Materials */
+  --surface-base: rgba(251, 251, 252, 0.88);
+  --surface-frosted-light: rgba(255, 255, 255, 0.06);
+  --surface-frosted-medium: rgba(255, 255, 255, 0.12);
+  --surface-frosted-strong: rgba(255, 255, 255, 0.18);
+  --surface-elevated: rgba(255, 255, 255, 0.95);
+  
+  /* Dark Mode Surfaces */
+  --surface-base-dark: rgba(15, 23, 36, 0.88);
+  --surface-frosted-dark-light: rgba(26, 26, 37, 0.06);
+  --surface-frosted-dark-medium: rgba(26, 26, 37, 0.12);
+  --surface-frosted-dark-strong: rgba(26, 26, 37, 0.18);
+  
+  /* Text Colors (Linear-style High Contrast) */
+  --text-primary: #0f1724;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --text-disabled: #d1d5db;
+  
+  /* Dark Mode Text */
+  --text-primary-dark: rgba(255, 255, 255, 0.95);
+  --text-secondary-dark: rgba(255, 255, 255, 0.65);
+  --text-tertiary-dark: rgba(255, 255, 255, 0.40);
+  
+  /* Borders & Dividers */
+  --border-subtle: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-strong: #9ca3af;
+  
+  /* Dark Mode Borders */
+  --border-subtle-dark: rgba(255, 255, 255, 0.08);
+  --border-medium-dark: rgba(255, 255, 255, 0.12);
+  
+  /* Brand Accent (Linear Purple-Indigo) */
+  --accent-primary: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-active: #4338ca;
+  --accent-light: #818cf8;
+  
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+  
+  /* ===== BACKDROP BLUR (Frosted Glass) ===== */
+  
+  --blur-light: 8px;
+  --blur-medium: 16px;
+  --blur-strong: 24px;
+  --blur-extra: 32px;
+  
+  /* ===== SPACING (8pt Grid System) ===== */
+  
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  
+  /* Mobile Screen Padding */
+  --screen-padding-mobile: 1rem;      /* 16px */
+  --screen-padding-tablet: 1.5rem;    /* 24px */
+  --screen-padding-desktop: 2rem;     /* 32px */
+  
+  /* ===== TYPOGRAPHY (Native Platform Fonts) ===== */
+  
+  /* Font Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', 'Segoe UI', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Roboto Mono', 'Courier New', monospace;
+  
+  /* Font Sizes (Mobile-optimized) */
+  --text-xs: 0.75rem;     /* 12px - Caption */
+  --text-sm: 0.8125rem;   /* 13px - Small body */
+  --text-base: 0.9375rem; /* 15px - Body text */
+  --text-md: 1rem;        /* 16px - Large body */
+  --text-lg: 1.0625rem;   /* 17px - Subhead */
+  --text-xl: 1.25rem;     /* 20px - H3 */
+  --text-2xl: 1.5rem;     /* 24px - H2 */
+  --text-3xl: 1.875rem;   /* 30px - H1 */
+  --text-4xl: 2.25rem;    /* 36px - Hero */
+  
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  
+  /* ===== RADII (Linear Mobile Style) ===== */
+  
+  --radius-xs: 0.25rem;   /* 4px */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+  
+  /* ===== SHADOWS (Minimal Linear Style) ===== */
+  
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 8px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px 0 rgba(0, 0, 0, 0.10), 0 4px 6px 0 rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 12px 24px 0 rgba(0, 0, 0, 0.12), 0 6px 12px 0 rgba(0, 0, 0, 0.08);
+  
+  /* ===== COMPONENT SIZES (Mobile Touch Targets) ===== */
+  
+  /* Navigation Bars */
+  --nav-bar-height-ios: 2.75rem;      /* 44px */
+  --nav-bar-height-android: 3.5rem;   /* 56px */
+  --tab-bar-height: 3rem;              /* 48px */
+  --safe-area-top: env(safe-area-inset-top, 0);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0);
+  
+  /* Buttons (WCAG AA Touch Targets) */
+  --button-height-sm: 2.25rem;   /* 36px */
+  --button-height-md: 2.75rem;   /* 44px */
+  --button-height-lg: 3rem;      /* 48px */
+  --button-height-xl: 3.5rem;    /* 56px */
+  
+  /* List Items */
+  --list-item-height-compact: 2.75rem;  /* 44px */
+  --list-item-height-default: 3.5rem;   /* 56px */
+  --list-item-height-large: 4rem;       /* 64px */
+  
+  /* Avatars */
+  --avatar-xs: 1.5rem;   /* 24px */
+  --avatar-sm: 2rem;     /* 32px */
+  --avatar-md: 2.5rem;   /* 40px */
+  --avatar-lg: 3rem;     /* 48px */
+  --avatar-xl: 4rem;     /* 64px */
+  
+  /* Icons */
+  --icon-xs: 1rem;      /* 16px */
+  --icon-sm: 1.25rem;   /* 20px */
+  --icon-md: 1.5rem;    /* 24px */
+  --icon-lg: 2rem;      /* 32px */
+  --icon-xl: 2.5rem;    /* 40px */
+  
+  /* Floating Action Button */
+  --fab-size: 3.5rem;   /* 56px */
+  --fab-icon: 1.5rem;   /* 24px */
+  
+  /* ===== TRANSITIONS (Linear-style Smooth) ===== */
+  
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+  --transition-slower: 500ms;
+  
+  /* Easing Functions */
+  --ease-linear: cubic-bezier(0, 0, 1, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* ===== Z-INDEX SCALE ===== */
+  
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-toast: 1600;
+  --z-tooltip: 1700;
+}

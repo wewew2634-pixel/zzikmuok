@@ -1,0 +1,83 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# ========================================
+# AGGRESSIVE CLEANUP RULES
+# ========================================
+
+# ALL non-essential config files
+*.config.mjs
+!next.config.mjs
+!tailwind.config.*
+!postcss.config.*
+!prettier.config.*
+
+# ALL documentation except README
+*.md
+!README.md
+!**/README.md
+
+# Infrastructure that should be in separate repos
+/docs/
+/agents/
+/backend/
+/db/
+/grafana/
+/n8n/
+/qa/
+
+# Screenshots and reviews
+/screenshots/
+/design-reviews/
+
+# Scripts
+/scripts/
+capture*.js
+capture*.mjs
+start-*.sh
+
+# Root-level config that varies per developer
+.env.example
+.env.local.example
+eslint.config.mjs
+
+# Package files (should be in subprojects)
+/package.json
+/package-lock.json
+
+# Source code at root (should be in zzik_stack_v7/web)
+/src/
+/public/
+/prisma/

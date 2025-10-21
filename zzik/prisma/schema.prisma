@@ -29,26 +29,48 @@ model User {
   emailVerified DateTime?
   name          String?
   image         String?
-  
+
   // 사용자 메타데이터
   username      String?   @unique  // 사용자가 직접 설정한 username
   bio           String?              // 프로필 소개
   phone         String?              // 전화번호
-  
+
+  // ZZMUK: 역할 및 위치 정보
+  role          String?   @default("creator") // "creator" | "shop" | "admin"
+  latitude      Float?    // 위도 (지리적 매칭용)
+  longitude     Float?    // 경도 (지리적 매칭용)
+  address       String?   // 주소 (사람이 읽을 수 있는 형태)
+
+  // ZZMUK: 비즈니스 메타데이터
+  category      String?   // "beauty" | "food" | "fashion" | "tech" 등
+  verified      Boolean   @default(false) // 인증된 사용자 여부
+
   // Stripe 구독 정보
   stripeCustomerId       String?   @unique
   stripeSubscriptionId   String?   @unique
   stripePriceId          String?
   stripeCurrentPeriodEnd DateTime?
-  
+
+  // Stripe Connect (마켓플레이스 정산용)
+  stripeConnectAccountId String?   @unique // Stripe Connect Account ID
+  stripeOnboardingComplete Boolean @default(false) // 온보딩 완료 여부
+
   // 시스템 필드
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   // Relations
   accounts      Account[]
   sessions      Session[]
-  
+  matchRequestsCreated MatchRequest[] @relation("MatchRequestCreator")
+  matchesReceived      MatchResult[]  @relation("MatchTarget")
+  transactionsBuyer    Transaction[]  @relation("TransactionBuyer")
+  transactionsSeller   Transaction[]  @relation("TransactionSeller")
+  settlementsReceiver  Settlement[]   @relation("SettlementReceiver")
+
+  @@index([latitude, longitude]) // 지리적 쿼리 최적화
+  @@index([role])
+  @@index([category])
   @@map("users")
 }
 
@@ -137,6 +159,170 @@ model UserActivity {
 }
 
 // ============================================
+// ZZMUK: 매칭 시스템
+// ============================================
+
+model MatchRequest {
+  id              String   @id @default(cuid())
+  userId          String   // 매칭을 요청한 사용자
+  targetRole      String   // "creator" | "shop" (찾고자 하는 상대방 역할)
+
+  // 검색 필터
+  maxDistance     Float    @default(3.0) // 최대 거리 (km)
+  category        String?  // 원하는 카테고리
+  minFollowers    Int?     // 최소 팔로워 수 (크리에이터 찾을 때)
+
+  // 상태
+  status          String   @default("pending") // "pending" | "processing" | "completed" | "expired"
+  resultsCount    Int      @default(0)         // 찾은 매칭 결과 수
+
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime // 요청 만료 시간 (예: 24시간 후)
+
+  user            User          @relation("MatchRequestCreator", fields: [userId], references: [id], onDelete: Cascade)
+  results         MatchResult[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("match_requests")
+}
+
+model MatchResult {
+  id              String   @id @default(cuid())
+  matchRequestId  String   // 어떤 매칭 요청의 결과인지
+  targetUserId    String   // 매칭된 상대방 사용자
+
+  // 매칭 점수 및 메트릭
+  distance        Float    // 거리 (km)
+  relevanceScore  Float    // 관련성 점수 (0.0 ~ 1.0)
+
+  // 매칭 이유 (디버깅/설명용)
+  matchReason     Json?    // { category: true, followerCount: 5000, engagement: 0.05 }
+
+  // 상태
+  status          String   @default("pending") // "pending" | "accepted" | "rejected" | "expired"
+  viewedAt        DateTime? // 사용자가 결과를 봤는지
+  respondedAt     DateTime? // 사용자가 응답했는지
+
+  createdAt       DateTime @default(now())
+
+  matchRequest    MatchRequest @relation(fields: [matchRequestId], references: [id], onDelete: Cascade)
+  targetUser      User         @relation("MatchTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+  transaction     Transaction? // 매칭이 거래로 이어진 경우
+
+  @@index([matchRequestId])
+  @@index([targetUserId])
+  @@index([status])
+  @@map("match_results")
+}
+
+// ============================================
+// ZZMUK: 정산 시스템
+// ============================================
+
+model Transaction {
+  id              String   @id @default(cuid())
+  matchResultId   String?  @unique // 어떤 매칭에서 발생했는지
+
+  // 거래 당사자
+  buyerId         String   // 구매자 (일반적으로 shop)
+  sellerId        String   // 판매자 (일반적으로 creator)
+
+  // 금액 정보 (KRW)
+  amount          Int      // 총 거래 금액 (원)
+  platformFee     Int      // 플랫폼 수수료 (원)
+  sellerAmount    Int      // 판매자가 받을 금액 (원)
+
+  // 결제 정보
+  paymentMethod   String   // "stripe" | "card" | "bank_transfer"
+  stripePaymentIntentId String? @unique // Stripe Payment Intent ID
+  stripeChargeId  String?  @unique // Stripe Charge ID
+
+  // 상태
+  status          String   @default("pending") // "pending" | "succeeded" | "failed" | "refunded"
+
+  // 메타데이터
+  description     String?  // 거래 설명
+  metadata        Json?    // 추가 정보
+
+  createdAt       DateTime @default(now())
+  paidAt          DateTime? // 결제 완료 시간
+
+  matchResult     MatchResult? @relation(fields: [matchResultId], references: [id])
+  buyer           User         @relation("TransactionBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller          User         @relation("TransactionSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  settlement      Settlement?
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+model Settlement {
+  id              String   @id @default(cuid())
+  transactionId   String   @unique // 어떤 거래에 대한 정산인지
+  receiverId      String   // 정산 받는 사람 (일반적으로 creator)
+
+  // 정산 금액 (KRW)
+  amount          Int      // 정산 금액 (원) = Transaction.sellerAmount
+
+  // 상태
+  status          String   @default("pending") // "pending" | "processing" | "completed" | "failed"
+
+  // T+0 정산 추적
+  initiatedAt     DateTime @default(now()) // 정산 시작 시간
+  completedAt     DateTime? // 정산 완료 시간
+  failedAt        DateTime? // 실패 시간
+  failureReason   String?   // 실패 사유
+
+  // 재시도 로직
+  retryCount      Int      @default(0)       // 재시도 횟수
+  nextRetryAt     DateTime? // 다음 재시도 시간
+
+  transaction     Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  receiver        User        @relation("SettlementReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  payout          Payout?
+
+  @@index([receiverId])
+  @@index([status])
+  @@index([initiatedAt])
+  @@map("settlements")
+}
+
+model Payout {
+  id              String   @id @default(cuid())
+  settlementId    String   @unique // 어떤 정산에 대한 지급인지
+
+  // Stripe Connect 정보
+  stripePayoutId  String?  @unique // Stripe Payout ID
+  stripeTransferId String? @unique // Stripe Transfer ID
+
+  // 지급 금액 (KRW)
+  amount          Int      // 실제 지급된 금액 (원)
+
+  // 상태
+  status          String   @default("pending") // "pending" | "in_transit" | "paid" | "failed" | "canceled"
+
+  // 시간 추적
+  createdAt       DateTime @default(now())
+  expectedArrival DateTime? // 예상 도착 시간
+  arrivedAt       DateTime? // 실제 도착 시간
+
+  // 실패 처리
+  failureCode     String?   // Stripe failure code
+  failureMessage  String?   // 실패 메시지
+
+  settlement      Settlement @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("payouts")
+}
+
+// ============================================
 // 사용 예시:
 // ============================================
 //
@@ -157,5 +343,12 @@ model UserActivity {
 // 4. 사용자가 어떤 SNS로든 로그인 가능:
 //    - Session 생성 (userId 연결)
 //    - 모든 연결된 SNS 계정 정보 조회 가능
+//
+// 5. ZZMUK 매칭 흐름:
+//    - Creator가 MatchRequest 생성 (3km 이내 shop 찾기)
+//    - 시스템이 MatchResult 생성 (거리/관련성 점수 포함)
+//    - Shop이 매칭 수락 → Transaction 생성
+//    - 결제 완료 → Settlement 생성 (T+0)
+//    - Stripe Connect로 Payout 실행 → 크리에이터 계좌 입금
 //
 // ============================================

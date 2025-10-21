@@ -3,9 +3,11 @@
  *
  * Critical Path: User requests match → sees results → accepts match
  * Performance: API response time < 200ms (p95)
+ * Visual Regression: Percy snapshots at key interaction points
  */
 
 import { test, expect } from '@playwright/test';
+import percySnapshot from '@percy/playwright';
 
 test.describe('Matching Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -92,12 +94,20 @@ test.describe('Matching Flow', () => {
     // Navigate to results page (adjust route as needed)
     await page.goto(`/dashboard/matches/${matchRequestId}`);
 
+    // Wait for results to load
+    await page.waitForLoadState('networkidle');
+
     // Verify results are displayed
     // (This depends on UI implementation - adjust selectors)
     const resultsContainer = page.locator('[data-testid="match-results"], .match-results').first();
 
     if (await resultsContainer.count() > 0) {
       await expect(resultsContainer).toBeVisible();
+
+      // Percy snapshot of match results
+      await percySnapshot(page, 'Match Results - Loaded', {
+        widths: [375, 768, 1280],
+      });
     } else {
       console.warn('Match results container not found - UI may not be implemented');
     }
@@ -109,10 +119,16 @@ test.describe('Matching Flow', () => {
     // Wait for page to be fully loaded
     await page.waitForLoadState('networkidle');
 
-    // Capture dashboard state
+    // Playwright local screenshot
     await expect(page).toHaveScreenshot('dashboard-matching.png', {
       maxDiffPixels: 100,
       threshold: 0.05,
+    });
+
+    // Percy cloud snapshot - Dashboard initial state
+    await percySnapshot(page, 'Dashboard - Matching Page', {
+      widths: [375, 768, 1280],
+      minHeight: 1024,
     });
   });
 });

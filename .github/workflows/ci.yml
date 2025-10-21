@@ -28,11 +28,11 @@ jobs:
       - name: Build
         run: npm run -s build --if-present
 
-  # ZZMUK Design-Loop Quality Gates
-  playwright:
+  # ZZMUK Design-Loop Quality Gates (Playwright + a11y + Percy)
+  design-loop:
     if: ${{ hashFiles('**/package.json') != '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,10 +45,14 @@ jobs:
         run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run Playwright tests
-        run: npx playwright test --project=chromium
+      - name: Run Playwright + Percy tests
+        run: npx percy exec -- npx playwright test --project=chromium
         env:
           BASE_URL: http://localhost:3000
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PERCY_BRANCH: ${{ github.head_ref || github.ref_name }}
+          PERCY_TARGET_BRANCH: ${{ github.base_ref || 'main' }}
+          PERCY_PULL_REQUEST: ${{ github.event.pull_request.number }}
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,6 +70,15 @@ jobs:
           else
             echo "ℹ️ No accessibility results found"
           fi
+      - name: Design Loop summary
+        if: always()
+        run: |
+          echo "📊 Design Loop Results:"
+          echo "- Playwright E2E: Check report artifact"
+          echo "- Accessibility: Check logs above"
+          echo "- Visual Regression: Check Percy dashboard"
+          echo ""
+          echo "🔗 Percy Build: https://percy.io/${{ github.repository }}"
 
   # Performance monitoring
   performance:

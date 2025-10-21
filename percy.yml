@@ -1,0 +1,62 @@
+# Percy Configuration for ZZMUK Design Loop
+#
+# Purpose: Visual regression testing with <5% threshold
+# Integration: Runs with Playwright E2E tests in CI
+#
+# Documentation: https://docs.percy.io/docs/config
+
+version: 2
+
+static:
+  # Build static assets for visual testing
+  build-dir: .next
+
+snapshot:
+  # Visual diff threshold (5% per orchestration rules)
+  widths:
+    - 375   # Mobile
+    - 768   # Tablet
+    - 1280  # Desktop
+
+  min-height: 1024
+
+  # Enable JavaScript
+  enable-javascript: true
+
+  # Percy-specific options
+  percy-css: |
+    /* Hide dynamic content that shouldn't affect visual regression */
+    [data-testid="timestamp"],
+    [data-testid="realtime-counter"] {
+      visibility: hidden !important;
+    }
+
+discovery:
+  # Exclude directories from Percy discovery
+  disallowed-hostnames:
+    - cdn.example.com
+
+  # Resource discovery settings
+  network-idle-timeout: 750
+
+# Comparison settings
+comparison:
+  # Threshold for visual differences
+  # 0.05 = 5% (matching orchestration rules)
+  threshold: 0.05
+
+  # Ignore regions (dynamic content)
+  ignore-regions: []
+
+# Browser settings
+browser:
+  # Use Chromium for consistency with Playwright tests
+  name: chromium
+
+# Debug settings
+debug: false
+
+# CI integration
+ci:
+  # Post PR comments with Percy results
+  post-pr-comment: true

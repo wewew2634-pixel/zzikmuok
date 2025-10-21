@@ -1,0 +1,61 @@
+# ZZMUK Design Loop Quality Thresholds
+#
+# Purpose: Define quality gates for CI/CD pipeline
+# Format: YAML
+# Unit compliance: %, ms, count
+
+version: 1.0.0
+
+# Visual Regression (Percy)
+visual:
+  threshold: 5.0  # % - Maximum allowed visual difference
+  fail_on_new: false  # Don't fail if new snapshots (first run)
+  baseline: main  # Branch to compare against
+
+# Accessibility (Axe)
+accessibility:
+  wcag_level: AA  # WCAG 2.1 AA compliance
+  min_score: 95.0  # % - Minimum accessibility score
+  allow_minor: true  # Allow minor violations (moderate/minor impact)
+  fail_on_critical: true  # Fail if critical violations found
+  fail_on_serious: true  # Fail if serious violations found
+
+# Performance (Playwright)
+performance:
+  api_p95: 200  # ms - Matching API p95 response time
+  api_p50: 100  # ms - Matching API p50 response time
+  page_load: 3000  # ms - Maximum page load time
+  time_to_interactive: 5000  # ms - Time to interactive
+
+# Code Quality (ESLint - if enabled)
+code:
+  max_warnings: 10  # Maximum ESLint warnings
+  max_errors: 0  # Maximum ESLint errors
+
+# Test Coverage (if unit tests exist)
+coverage:
+  enabled: false  # Not implemented yet
+  min_lines: 80.0  # % - Minimum line coverage
+  min_branches: 75.0  # % - Minimum branch coverage
+
+# Build
+build:
+  max_size: 5  # MB - Maximum bundle size
+  timeout: 600  # seconds - Maximum build time
+
+# CI Behavior
+ci:
+  fail_fast: false  # Continue all tests even if one fails
+  retry_flaky: true  # Retry flaky tests once
+  upload_artifacts: true  # Upload test artifacts (screenshots, videos)
+  notification:
+    on_failure: true
+    on_success: false
+
+# Reporting
+reports:
+  format: html  # html, json, junit
+  output_dir: .reports
+  include_screenshots: true
+  include_videos: false  # Videos only on failure
+  percy_url: true  # Include Percy build URL in reports

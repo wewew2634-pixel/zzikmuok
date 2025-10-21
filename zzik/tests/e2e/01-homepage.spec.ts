@@ -2,12 +2,13 @@
  * Homepage E2E Tests
  *
  * Critical Path: User lands on homepage → sees value proposition → CTA works
- * Visual Regression: Capture baseline for future comparisons
+ * Visual Regression: Playwright screenshots + Percy cloud comparison
  * Accessibility: WCAG AA compliance
  */
 
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import percySnapshot from '@percy/playwright';
 
 test.describe('Homepage', () => {
   test('should load successfully', async ({ page }) => {
@@ -68,10 +69,16 @@ test.describe('Homepage', () => {
     // Wait for page to be fully loaded
     await page.waitForLoadState('networkidle');
 
-    // Take screenshot for visual regression
+    // Playwright local screenshot (fast, offline)
     await expect(page).toHaveScreenshot('homepage.png', {
       maxDiffPixels: 100, // Allow small differences (anti-aliasing, etc.)
       threshold: 0.05, // 5% threshold per orchestration rules
+    });
+
+    // Percy cloud snapshot (cross-browser, detailed diff UI)
+    await percySnapshot(page, 'Homepage - Initial Load', {
+      widths: [375, 768, 1280], // Mobile, Tablet, Desktop
+      minHeight: 1024,
     });
   });
 
@@ -90,6 +97,12 @@ test.describe('Homepage', () => {
 
       // Should navigate away from homepage
       await page.waitForURL((url) => url.pathname !== '/');
+
+      // Percy snapshot after navigation
+      await page.waitForLoadState('networkidle');
+      await percySnapshot(page, 'Homepage - After CTA Click', {
+        widths: [375, 768, 1280],
+      });
     } else {
       console.warn('No "Get Started" CTA found on homepage');
     }

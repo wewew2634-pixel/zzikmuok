@@ -33,10 +33,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Text audit outputs
+# text audit outputs
 audit/
 tmp/
 
-# Text audit outputs
-audit/
-tmp/
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

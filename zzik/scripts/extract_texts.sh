@@ -23,9 +23,6 @@ INCLUDE_ARGS=(
   -g '*.jsx'
   -g '*.vue'
   -g '*.svelte'
-  -g '*.json'
-  -g '*.yml'
-  -g '*.yaml'
 )
 EXCLUDE_ARGS=(
   -g '!node_modules'
@@ -37,116 +34,19 @@ EXCLUDE_ARGS=(
   -g '!.git'
 )
 
-# 1A. 따옴표 문자열(싱글/더블/백틱)만 추출
+# 1A. 따옴표 문자열 추출
 echo "  🔍 따옴표 문자열 추출 중..."
-rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e '"[^"]{2,}"' . \
-| python3 - <<'PY' > tmp/quoted_double.csv
-import sys, csv, re
-w = csv.writer(sys.stdout)
-for line in sys.stdin:
-    try:
-        parts = line.strip().split(":", 2)
-        if len(parts) < 3: continue
-        path, lineno, rest = parts
-        # 더블 쿼트 문자열 추출
-        matches = re.findall(r'"([^"]{2,})"', rest)
-        for s in matches:
-            # 코드 키/경로처럼 보이는 건 걸러냄
-            if re.fullmatch(r"[A-Za-z0-9_.:/\\-]{2,}", s): continue
-            if len(s.strip()) < 2: continue
-            w.writerow([path, lineno, "quoted", s, len(s)])
-    except Exception:
-        pass
-PY
+rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e '["\`'\''][^"\`'\''\n]{2,}["\`'\'']' . \
+  | python3 scripts/text-audit/extract_quoted.py > tmp/quoted.csv
 
-# 싱글 쿼트 문자열 추출
-rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e "'[^']{2,}'" . \
-| python3 - <<'PY' > tmp/quoted_single.csv
-import sys, csv, re
-w = csv.writer(sys.stdout)
-for line in sys.stdin:
-    try:
-        parts = line.strip().split(":", 2)
-        if len(parts) < 3: continue
-        path, lineno, rest = parts
-        matches = re.findall(r"'([^']{2,})'", rest)
-        for s in matches:
-            if re.fullmatch(r"[A-Za-z0-9_.:/\\-]{2,}", s): continue
-            if len(s.strip()) < 2: continue
-            w.writerow([path, lineno, "quoted", s, len(s)])
-    except Exception:
-        pass
-PY
-
-# 백틱 문자열 추출
-rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e '`[^`]{2,}`' . \
-| python3 - <<'PY' > tmp/quoted_backtick.csv
-import sys, csv, re
-w = csv.writer(sys.stdout)
-for line in sys.stdin:
-    try:
-        parts = line.strip().split(":", 2)
-        if len(parts) < 3: continue
-        path, lineno, rest = parts
-        matches = re.findall(r'`([^`]{2,})`', rest)
-        for s in matches:
-            if re.fullmatch(r"[A-Za-z0-9_.:/\\-]{2,}", s): continue
-            if len(s.strip()) < 2: continue
-            w.writerow([path, lineno, "quoted", s, len(s)])
-    except Exception:
-        pass
-PY
-
-# 1B. JSX 텍스트 노드: >텍스트< 패턴
+# 1B. JSX 텍스트 노드
 echo "  🔍 JSX 텍스트 노드 추출 중..."
-rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e '>[^<>]{2,}<' . \
-| python3 - <<'PY' > tmp/jsx.csv
-import sys, csv, re
-w = csv.writer(sys.stdout)
-for line in sys.stdin:
-    try:
-        parts = line.strip().split(":", 2)
-        if len(parts) < 3: continue
-        path, lineno, rest = parts
-        # JSX 텍스트 패턴: >텍스트<
-        matches = re.findall(r'>([^<>\n]{2,})<', rest)
-        for s in matches:
-            s = s.strip()
-            # 템플릿 자리표시자/변수만 있는 경우 제외
-            if re.fullmatch(r"[{][^}]+[}]", s): continue
-            if re.fullmatch(r"[A-Za-z0-9_.:/\\-]{2,}", s): continue
-            if len(s) < 2: continue
-            w.writerow([path, lineno, "jsx", s, len(s)])
-    except Exception:
-        pass
-PY
+rg -n --no-heading "${INCLUDE_ARGS[@]}" "${EXCLUDE_ARGS[@]}" -e '>[^<>\n]{2,}<' . \
+  | python3 scripts/text-audit/extract_jsx.py > tmp/jsx.csv
 
 # 1C. 합치고 중복 제거
 echo "  📊 중복 제거 및 정렬 중..."
-python3 - <<'PY' > audit/user_texts.csv
-import csv, sys, os
-rows = []
-seen = set()
-for f in ("tmp/quoted_double.csv", "tmp/quoted_single.csv", "tmp/quoted_backtick.csv", "tmp/jsx.csv"):
-    if not os.path.exists(f):
-        continue
-    try:
-        with open(f, newline='', encoding='utf-8') as r:
-            for row in csv.reader(r):
-                if len(row) < 5: continue
-                key = tuple(row[:4]) # file,line,type,text
-                if key in seen:
-                    continue
-                seen.add(key)
-                rows.append(row)
-    except Exception:
-        pass
-# 길이 기준선: 공백 포함 2자 이상
-rows.sort(key=lambda x:(x[0], int(x[1]), x[2]))
-w = csv.writer(sys.stdout)
-w.writerow(["file","line","type","text","length"])
-w.writerows(rows)
-PY
+python3 scripts/text-audit/merge_texts.py > audit/user_texts.csv
 
 # 결과 통계
 TOTAL=$(tail -n +2 audit/user_texts.csv 2>/dev/null | wc -l | tr -d ' ')

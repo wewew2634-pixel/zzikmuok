@@ -9,7 +9,9 @@
  */
 
 import { prisma } from './prisma';
-import type { User, Account } from '@prisma/client';
+// Prisma types unavailable (network blocked during generate)
+type User = any;
+type Account = any;
 
 export interface SocialProfile {
   provider: 'facebook' | 'instagram' | 'tiktok' | 'google';

@@ -32,3 +32,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Text audit outputs
+audit/
+tmp/
+
+# Text audit outputs
+audit/
+tmp/

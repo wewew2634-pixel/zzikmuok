@@ -17,6 +17,7 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import crypto from 'crypto';
 import { readFileSync, existsSync, statSync } from 'fs';
 import { resolve, normalize, relative } from 'path';
 import { fileURLToPath } from 'url';
@@ -303,9 +304,42 @@ app.post('/api/v1/checkout', (req, res) => {
  * POST /api/v1/pg/webhook
  * Payment gateway webhook
  * Spec: status=CAPTURED → Issue 1-time QR (5min TTL, ±60s drift)
+ * Security: HMAC-SHA256 signature verification + timestamp validation
  */
 app.post('/api/v1/pg/webhook', (req, res) => {
   const { session_id, status, amount, payment_id } = req.body;
+
+  // Get signature and timestamp from headers
+  const signature = req.get('X-Pay-Signature');
+  const timestamp = req.get('X-Pay-Timestamp');
+
+  // Verify webhook signature (if secret is configured)
+  const webhookSecret = process.env.PG_WEBHOOK_SECRET;
+  if (webhookSecret && signature && timestamp) {
+    // Verify timestamp (±5 minutes tolerance)
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const requestTimestamp = parseInt(timestamp, 10);
+
+    if (Math.abs(currentTimestamp - requestTimestamp) > 300) {
+      console.warn('Webhook timestamp out of range:', {
+        current: currentTimestamp,
+        request: requestTimestamp
+      });
+      return res.status(400).json({ error: 'TIMESTAMP_OUT_OF_RANGE' });
+    }
+
+    // Verify HMAC-SHA256 signature
+    const payload = timestamp + '.' + JSON.stringify(req.body);
+    const expectedSignature = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(payload)
+      .digest('base64');
+
+    if (signature !== expectedSignature) {
+      console.warn('Invalid webhook signature');
+      return res.status(401).json({ error: 'INVALID_SIGNATURE' });
+    }
+  }
 
   // Only process CAPTURED status
   if (status !== 'CAPTURED') {

@@ -101,7 +101,7 @@ export const instagramAPI = {
 export const getStripeClient = async () => {
   const Stripe = (await import('stripe')).default;
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2024-10-28.acacia',
+    apiVersion: '2025-02-24.acacia',
   });
 };
 

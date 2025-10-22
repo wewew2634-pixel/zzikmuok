@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 
-const inter = Inter({ 
-  subsets: ["latin"],
+// Use system fonts (no Google Fonts fetch)
+const inter = {
   variable: '--font-sans',
-  display: 'swap',
-});
+  className: ''
+};
 
 export const metadata: Metadata = {
   title: "ZZMUK - 로컬 숏폼 즉시 매칭",

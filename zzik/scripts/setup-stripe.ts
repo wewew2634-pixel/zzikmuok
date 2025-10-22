@@ -37,7 +37,7 @@ async function setupStripePrices() {
     // Import Stripe dynamically
     const Stripe = (await import('stripe')).default;
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
-      apiVersion: '2024-10-28.acacia',
+      apiVersion: '2025-02-24.acacia',
     });
 
     console.log('📦 Creating ZZIK Subscription Products...\n');

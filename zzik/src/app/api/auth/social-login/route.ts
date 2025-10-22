@@ -137,7 +137,7 @@ export async function GET(request: NextRequest) {
         bio: user.bio,
         createdAt: user.createdAt,
       },
-      accounts: user.accounts.map((account) => ({
+      accounts: user.accounts.map((account: any) => ({
         id: account.id,
         provider: account.provider,
         profilePicture: account.profile_picture,

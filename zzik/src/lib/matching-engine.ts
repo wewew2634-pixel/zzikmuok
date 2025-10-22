@@ -137,7 +137,7 @@ export async function findMatches(
 
     // Calculate total follower count from all connected accounts
     const totalFollowers = candidate.accounts.reduce(
-      (sum, account) => sum + (account.follower_count || 0),
+      (sum: number, account: any) => sum + (account.follower_count || 0),
       0
     );
 

@@ -134,21 +134,48 @@ export default function Home() {
 
                 {/* Glass Card */}
                 <div className="relative p-8 bg-[var(--color-surface-elevated)]/75 backdrop-blur-2xl backdrop-saturate-150 border border-[var(--color-border-primary)] rounded-2xl shadow-2xl">
-                  {/* Main Skeleton */}
-                  <div className="h-64 md:h-80 mb-4 bg-[var(--color-surface-raised)] rounded-xl animate-pulse" />
-
-                  {/* Grid Skeletons */}
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg animate-pulse" />
-                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg animate-pulse" />
-                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg animate-pulse" />
+                  {/* QR Flow Visualization */}
+                  <div className="h-64 md:h-80 mb-4 bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface-base)] rounded-xl flex items-center justify-center relative overflow-hidden">
+                    {/* QR Code Mockup */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="size-40 bg-white rounded-2xl shadow-lg p-4 flex items-center justify-center">
+                        <div className="size-full bg-[linear-gradient(90deg,oklch(12%_0.02_240)_1px,transparent_1px),linear-gradient(oklch(12%_0.02_240)_1px,transparent_1px)] bg-[size:8px_8px]" />
+                      </div>
+                    </div>
+                    {/* Floating Labels */}
+                    <div className="absolute top-6 left-6 px-3 py-1.5 bg-[var(--color-accent-primary)] text-[oklch(10%_0_0)] text-xs font-medium rounded-full shadow-md">
+                      5분 TTL
+                    </div>
+                    <div className="absolute bottom-6 right-6 px-3 py-1.5 bg-green-500 text-white text-xs font-medium rounded-full shadow-md">
+                      단일 사용
+                    </div>
                   </div>
 
-                  {/* Button Skeletons with Hairline */}
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg p-3 flex flex-col justify-between">
+                      <span className="text-xs text-[var(--color-text-tertiary)]">반경</span>
+                      <span className="text-2xl font-bold text-[var(--color-accent-primary)]">3km</span>
+                    </div>
+                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg p-3 flex flex-col justify-between">
+                      <span className="text-xs text-[var(--color-text-tertiary)]">정산</span>
+                      <span className="text-2xl font-bold text-[var(--color-accent-primary)]">T+0</span>
+                    </div>
+                    <div className="h-24 bg-[var(--color-surface-raised)] rounded-lg p-3 flex flex-col justify-between">
+                      <span className="text-xs text-[var(--color-text-tertiary)]">SLA</span>
+                      <span className="text-2xl font-bold text-[var(--color-accent-primary)]">5분</span>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons with Hairline */}
                   <div className="relative pt-6 before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--color-border-primary)] before:to-transparent">
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="h-10 bg-[var(--color-surface-raised)] rounded-lg animate-pulse" />
-                      <div className="h-10 bg-[var(--color-surface-raised)] rounded-lg animate-pulse" />
+                      <button className="h-10 bg-[var(--color-accent-primary)] text-[oklch(10%_0_0)] font-medium rounded-lg hover:bg-[var(--color-accent-hover)] active:scale-[0.98] transition-all duration-200 text-sm">
+                        체크아웃
+                      </button>
+                      <button className="h-10 bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] font-medium rounded-lg border border-[var(--color-border-primary)] hover:bg-[var(--color-surface-elevated)] active:scale-[0.98] transition-all duration-200 text-sm">
+                        QR 발급
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -221,10 +248,57 @@ export default function Home() {
                 </p>
               </div>
               <div className="md:col-span-8 grid grid-cols-2 gap-4">
-                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl animate-pulse" />
-                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl animate-pulse" />
-                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl animate-pulse" />
-                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl animate-pulse" />
+                {/* Step 1: Create Campaign */}
+                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl p-5 flex flex-col justify-between group hover:bg-[var(--color-surface-elevated)] transition-all duration-300 border border-[var(--color-border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <div className="size-10 bg-[var(--color-accent-bg)] rounded-lg flex items-center justify-center">
+                      <span className="text-lg font-bold text-[var(--color-accent-primary)]">1</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">캠페인 생성</h3>
+                  </div>
+                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                    상점·예산·조건 설정
+                  </p>
+                </div>
+
+                {/* Step 2: Matching */}
+                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl p-5 flex flex-col justify-between group hover:bg-[var(--color-surface-elevated)] transition-all duration-300 border border-[var(--color-border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <div className="size-10 bg-[var(--color-accent-bg)] rounded-lg flex items-center justify-center">
+                      <span className="text-lg font-bold text-[var(--color-accent-primary)]">2</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">즉시 매칭</h3>
+                  </div>
+                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                    3km 내 크리에이터 10명 자동 추천
+                  </p>
+                </div>
+
+                {/* Step 3: Upload */}
+                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl p-5 flex flex-col justify-between group hover:bg-[var(--color-surface-elevated)] transition-all duration-300 border border-[var(--color-border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <div className="size-10 bg-[var(--color-accent-bg)] rounded-lg flex items-center justify-center">
+                      <span className="text-lg font-bold text-[var(--color-accent-primary)]">3</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">촬영·업로드</h3>
+                  </div>
+                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                    숏폼 영상 제작 및 제출
+                  </p>
+                </div>
+
+                {/* Step 4: Settlement */}
+                <div className="h-40 bg-[var(--color-surface-raised)] rounded-xl p-5 flex flex-col justify-between group hover:bg-[var(--color-surface-elevated)] transition-all duration-300 border border-[var(--color-border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <div className="size-10 bg-[var(--color-accent-bg)] rounded-lg flex items-center justify-center">
+                      <span className="text-lg font-bold text-[var(--color-accent-primary)]">4</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">승인·정산</h3>
+                  </div>
+                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+                    자동 검증 후 T+0 즉시 정산
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -267,7 +341,7 @@ export default function Home() {
               id="chat-form"
               className="p-6 bg-[var(--color-surface-elevated)] border border-[var(--color-border-primary)] rounded-xl"
             >
-              <div id="chat-history" className="mb-6 space-y-3 min-h-[200px] max-h-[400px] overflow-y-auto" />
+              <div id="chat-log" className="mb-6 space-y-3 min-h-[200px] max-h-[400px] overflow-y-auto" />
               <div className="flex gap-3">
                 <input
                   type="text"

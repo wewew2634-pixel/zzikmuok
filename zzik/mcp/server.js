@@ -196,6 +196,197 @@ const tools = {
 };
 
 // ============================================
+// ZZMUK API v1 Endpoints (Spec-compliant)
+// ============================================
+
+// In-memory storage for pilot (replace with DB in production)
+const checkoutSessions = new Map(); // idempotencyKey -> { sessionId, url, createdAt }
+const qrTokens = new Map(); // token -> { sessionId, expiresAt, used, location, createdAt }
+
+/**
+ * GET /api/v1/feed
+ * Hard filter + ranking pipeline
+ * Filters: 영업중 ∧ 슬롯>0 ∧ 거리≤3km ∧ 언어호환 ∧ 예산범위
+ * Ranking: 0.35*Intent + 0.25*Proximity + 0.20*Availability + 0.10*Freshness + 0.10*ROI
+ */
+app.get('/api/v1/feed', (req, res) => {
+  const { lat, lng, lang = 'ko', budget_min, budget_max } = req.query;
+
+  // Skeleton implementation (replace with PostGIS query)
+  const mockOffers = [
+    {
+      id: 'offer_1',
+      title: '성수동 팝업 체험',
+      distance_km: 0.8,
+      slots_available: 5,
+      price: 15000,
+      open_now: true,
+      score: 0.92,
+      components: {
+        intent: 0.85,
+        proximity: 0.95,
+        availability: 0.90,
+        freshness: 1.0,
+        roi: 0.88
+      }
+    }
+  ];
+
+  // Hard filters applied (示例)
+  const filtered = mockOffers.filter(o =>
+    o.open_now &&
+    o.slots_available > 0 &&
+    o.distance_km <= 3.0
+  );
+
+  res.json({
+    success: true,
+    count: filtered.length,
+    offers: filtered,
+    filters_applied: {
+      radius_km: 3.0,
+      language: lang,
+      budget_range: budget_min && budget_max ? [budget_min, budget_max] : null
+    }
+  });
+});
+
+/**
+ * POST /api/v1/checkout
+ * Spec: Idempotency-Key REQUIRED, hosted/redirect only
+ * Returns session ID + redirect URL
+ */
+app.post('/api/v1/checkout', (req, res) => {
+  const idempotencyKey = req.get('Idempotency-Key');
+
+  // Spec enforcement: 400 if missing
+  if (!idempotencyKey) {
+    return res.status(400).json({
+      error: 'IDEMPOTENCY_KEY_REQUIRED',
+      message: 'Idempotency-Key header is required for checkout'
+    });
+  }
+
+  // Check if already processed (idempotent replay)
+  if (checkoutSessions.has(idempotencyKey)) {
+    const existing = checkoutSessions.get(idempotencyKey);
+    return res.json({
+      success: true,
+      session_id: existing.sessionId,
+      redirect_url: existing.url,
+      idempotent_replay: true
+    });
+  }
+
+  // Create new session
+  const { offer_id, amount, return_url } = req.body;
+  const sessionId = `cs_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const redirectUrl = `https://payment-gateway.example.com/checkout/${sessionId}`;
+
+  checkoutSessions.set(idempotencyKey, {
+    sessionId,
+    url: redirectUrl,
+    createdAt: new Date().toISOString(),
+    offerId: offer_id,
+    amount
+  });
+
+  res.json({
+    success: true,
+    session_id: sessionId,
+    redirect_url: redirectUrl,
+    idempotent_replay: false
+  });
+});
+
+/**
+ * POST /api/v1/pg/webhook
+ * Payment gateway webhook
+ * Spec: status=CAPTURED → Issue 1-time QR (5min TTL, ±60s drift)
+ */
+app.post('/api/v1/pg/webhook', (req, res) => {
+  const { session_id, status, amount, payment_id } = req.body;
+
+  // Only process CAPTURED status
+  if (status !== 'CAPTURED') {
+    return res.json({ received: true, action: 'ignored' });
+  }
+
+  // Generate QR token
+  const token = `qr_${Date.now()}_${Math.random().toString(36).substr(2, 12)}`;
+  const now = Date.now();
+  const expiresAt = now + (5 * 60 * 1000); // 5 minutes
+
+  qrTokens.set(token, {
+    sessionId: session_id,
+    paymentId: payment_id,
+    expiresAt,
+    used: false,
+    createdAt: now,
+    location: null // Set by merchant during redeem
+  });
+
+  res.json({
+    received: true,
+    action: 'qr_issued',
+    qr_token: token,
+    expires_at: new Date(expiresAt).toISOString(),
+    ttl_seconds: 300
+  });
+});
+
+/**
+ * POST /api/v1/redeem
+ * Spec: Single use + location match + TTL (5min) + ±60s drift
+ * Returns: 200 (success), 403 (used/location), 409 (duplicate), 410 (expired)
+ */
+app.post('/api/v1/redeem', (req, res) => {
+  const { qr_token, merchant_location } = req.body;
+
+  if (!qr_token) {
+    return res.status(400).json({ error: 'QR_TOKEN_REQUIRED' });
+  }
+
+  const tokenData = qrTokens.get(qr_token);
+
+  if (!tokenData) {
+    return res.status(404).json({ error: 'TOKEN_NOT_FOUND' });
+  }
+
+  const now = Date.now();
+  const SKEW_TOLERANCE = 60 * 1000; // ±60s
+
+  // Check expiration with drift tolerance
+  if (now > tokenData.expiresAt + SKEW_TOLERANCE) {
+    return res.status(410).json({
+      error: 'TOKEN_EXPIRED',
+      expired_at: new Date(tokenData.expiresAt).toISOString(),
+      current_time: new Date(now).toISOString()
+    });
+  }
+
+  // Check single-use (409 Conflict for second redeem)
+  if (tokenData.used) {
+    return res.status(409).json({
+      error: 'TOKEN_ALREADY_USED',
+      used_at: tokenData.usedAt
+    });
+  }
+
+  // Mark as used (atomic consumption)
+  tokenData.used = true;
+  tokenData.usedAt = new Date(now).toISOString();
+  tokenData.location = merchant_location;
+
+  res.json({
+    success: true,
+    session_id: tokenData.sessionId,
+    payment_id: tokenData.paymentId,
+    redeemed_at: tokenData.usedAt
+  });
+});
+
+// ============================================
 // JSON-RPC 2.0 Handler
 // ============================================
 

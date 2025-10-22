@@ -13,7 +13,7 @@
  */
 
 import { spawn } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -80,7 +80,7 @@ const env = {
 
 // .env 파일 로드 (간단한 파서)
 if (existsSync(envPath)) {
-  const envContent = require('fs').readFileSync(envPath, 'utf8');
+  const envContent = readFileSync(envPath, 'utf8');
   envContent.split('\n').forEach(line => {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) return;
